@@ -12,7 +12,7 @@ platform :android do
     puts ENV['GOOGLE_APPLICATION_CREDENTIALS']
     puts "APP_ID"
     puts ENV['APP_ID']
-    cat ENV['GOOGLE_APPLICATION_CREDENTIALS']
+    sh("cat",ENV['GOOGLE_APPLICATION_CREDENTIALS'])
     # get the latest release from Firebase App Distribution
     latest_release = firebase_app_distribution_get_latest_release(
     app: ENV['APP_ID'],)
