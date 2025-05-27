@@ -22,10 +22,11 @@ jobs: # Define the jobs
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
-      
+      - name: Export 
+        run: echo "GOOGLE_SERVICE_ACCOUNT_JSON=${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" >> $GITHUB_ENV
       - name: Create credentials file # write the json content from secrets to service-account.json
         run: echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" > ${{ github.workspace }}/service-account.json
-
+      
       - name: Set environment variable for Google credentials #export the file path to GOOGLE_APPLICATION_CREDENTIALS
         run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/service-account.json" >> $GITHUB_ENV
       

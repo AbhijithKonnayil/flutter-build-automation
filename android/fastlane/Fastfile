@@ -15,7 +15,9 @@ platform :android do
     sh("cat",ENV['GOOGLE_APPLICATION_CREDENTIALS'])
     # get the latest release from Firebase App Distribution
     latest_release = firebase_app_distribution_get_latest_release(
-    app: ENV['APP_ID'],)
+    app: ENV['APP_ID'],
+    service_credentials_json_data: ENV['GOOGLE_SERVICE_ACCOUNT_JSON'],
+    )
     
     # if no releases found, set build_number to 1, otherwise increment the latest release version
     build_number = 1
