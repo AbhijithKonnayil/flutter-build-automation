@@ -9,23 +9,26 @@ jobs: # Define the jobs
       - name: Checkout code   # Checkout the repository code
         uses: actions/checkout@v2 
       
-      - name: Setup Flutter # Setup Flutter environment
-        uses: subosito/flutter-action@v1
-        with:
-          channel: 'stable'
-          flutter-version: 3.32.0
+#      - name: Setup Flutter # Setup Flutter environment
+#        uses: subosito/flutter-action@v1
+#        with:
+#          channel: 'stable'
+#          flutter-version: 3.32.0
+#
+#      - name: Install dependencies # Install Flutter dependencies
+#        run: flutter pub get
+#
+#      - name: Set up Ruby    #Setup Ruby
+#        uses: ruby/setup-ruby@v1
+#        with:
+#          ruby-version: '3.3'
 
-      - name: Install dependencies # Install Flutter dependencies
-        run: flutter pub get
-
-      - name: Set up Ruby    #Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3'
       - name: Export 
-        run: echo "GOOGLE_SERVICE_ACCOUNT_JSON=${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" >> $GITHUB_ENV
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" | base64 -d > "${{ github.workspace }}/service-account.json"
+      
       - name: Create credentials file # write the json content from secrets to service-account.json
-        run: echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" > ${{ github.workspace }}/service-account.json
+        run: echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" > ${{ github.workspace }}/service-account_.json
       
       - name: Set environment variable for Google credentials #export the file path to GOOGLE_APPLICATION_CREDENTIALS
         run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/service-account.json" >> $GITHUB_ENV
