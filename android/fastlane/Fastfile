@@ -1,38 +1,44 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
+  desc "Dummy lane to test fastlane setup"
+  lane :hello do
+    sh("echo 'Hello ...'")
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+  desc "lane to update build number"
+  lane :update_build_number do
+
+    # get the latest release from Firebase App Distribution
+    latest_release = firebase_app_distribution_get_latest_release(
+    app: ENV['APP_ID'],)
+    
+    # if no releases found, set build_number to 1, otherwise increment the latest release version
+    build_number = 1
+    if(latest_release.nil?)
+      puts "No releases found."
+    else
+      build_number =  latest_release[:buildVersion].to_i + 1
+    end
+
+    flutter_versioner(
+      version_component:"version_code",
+      value:"#{build_number}"
+      )
   end
 
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+  lane :build_apk do
+    Dir.chdir '../..' do
+      sh("flutter","build","apk",)
+    end
   end
-end
+
+  lane :distribute do
+  firebase_app_distribution(
+    app: ENV['APP_ID'],
+    apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
+    )  
+  end
+
+
+end #end platform :android
