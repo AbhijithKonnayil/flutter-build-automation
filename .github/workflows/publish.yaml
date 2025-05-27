@@ -18,10 +18,10 @@ jobs: # Define the jobs
 #      - name: Install dependencies # Install Flutter dependencies
 #        run: flutter pub get
 #
-#      - name: Set up Ruby    #Setup Ruby
-#        uses: ruby/setup-ruby@v1
-#        with:
-#          ruby-version: '3.3'
+      - name: Set up Ruby    #Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
 
       - name: Export 
         run: |
